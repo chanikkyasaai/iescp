@@ -32,7 +32,6 @@ This platform connects Sponsors and Influencers, allowing Sponsors to advertise 
 
 - **Backend**: Flask, SQLite
 - **Frontend**: Jinja2, Bootstrap, HTML, CSS, JS
-- **Version Control**: Git, GitHub
 
 ## Setup Instructions
 
