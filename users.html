@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"> Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Manage Users</h1>
+
+    <div class="row">
+        <!-- Influencers Section -->
+        <div class="col-md-4">
+            <h2>Influencers</h2>
+            <form method="get" action="{{ url_for('admin_users') }}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="influencer_search_query" placeholder="Search Influencers...">
+                </div>
+                <div class="form-group">
+                    <label for="influencer_status">Filter by Verification Status:</label>
+                    <select class="form-control" id="influencer_status" name="influencer_status">
+                        <option value="">All</option>
+                        <option value="-1">Flagged</option>
+                        <option value="0">Not Verified</option>
+                        <option value="1">Verified</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div class="list-group mt-3">
+                {% for influencer in influencers %}
+                <div class="list-group-item">
+                    <a href="{{ url_for('details', entity_type='influencer', id=influencer.auth_id) }}" class="list-group-item">
+                    <p><strong>{{ influencer.fname }} {{ influencer.lname }}</strong></p></a>
+                    <p>Email: {{ influencer_emails[influencer.auth_id]  }}</p>
+                    <p>Verification Status: 
+                        {% if influencer.verification_status == -1 %}Flagged
+                        {% elif influencer.verification_status == 0 %}Not Verified
+                        {% else %}Verified
+                        {% endif %}
+                    </p>
+                    <form method="post" action="{{ url_for('update_influencer_status', influencer_id=influencer.auth_id) }}">
+                        <div class="form-group">
+                            <label for="verification_status">Change Verification Status:</label>
+                            <select class="form-control" id="verification_status" name="verification_status">
+                                <option value="-1" {% if influencer.verification_status == -1 %}selected{% endif %}>Flagged</option>
+                                <option value="0" {% if influencer.verification_status == 0 %}selected{% endif %}>Not Verified</option>
+                                <option value="1" {% if influencer.verification_status == 1 %}selected{% endif %}>Verified</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Status</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sponsors Section -->
+        <div class="col-md-4">
+            <h2>Sponsors</h2>
+            <form method="get" action="{{ url_for('admin_users') }}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="sponsor_search_query" placeholder="Search Sponsors...">
+                </div>
+                <div class="form-group">
+                    <label for="sponsor_flag">Filter by Flag Status:</label>
+                    <select class="form-control" id="sponsor_flag" name="sponsor_flag">
+                        <option value="">All</option>
+                        <option value="0">Not Flagged</option>
+                        <option value="1">Flagged</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div class="list-group mt-3">
+                {% for sponsor in sponsors %}
+                <div class="list-group-item">
+                    <a href="{{ url_for('details', entity_type='sponsor', id=sponsor.auth_id) }}" class="list-group-item">
+                    <p><strong>{{ sponsor.fname }} {{ sponsor.lname }}</strong> ({{ sponsor.company_name }})</p> </a>
+                    <p>Email: {{ sponsor_emails[sponsor.auth_id] }}</p>
+                    <p>Flag Status: {{ 'Flagged' if sponsor.flag == 1 else 'Not Flagged' }}</p>
+                    <form method="post" action="{{ url_for('toggle_flag_sponsor', sponsor_id=sponsor.auth_id) }}">
+                        {% if sponsor.flag == 1 %}
+                        <button type="submit" class="btn btn-secondary">Unflag</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-warning">Flag</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Campaigns Section -->
+        <div class="col-md-4">
+            <h2>Campaigns</h2>
+            <form method="get" action="{{ url_for('admin_users') }}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="campaign_search_query" placeholder="Search Campaigns...">
+                </div>
+                <div class="form-group">
+                    <label for="campaign_flag">Filter by Flag Status:</label>
+                    <select class="form-control" id="campaign_flag" name="campaign_flag">
+                        <option value="">All</option>
+                        <option value="0">Not Flagged</option>
+                        <option value="1">Flagged</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div class="list-group mt-3">
+                {% for campaign in campaigns %}
+                <div class="list-group-item">
+                    <a href="{{ url_for('details', entity_type='campaign', id=campaign.id) }}" class="list-group-item">
+                    <p><strong>{{ campaign.name }}</strong></p> </a>
+                    <p>Status: {{ 'Flagged' if campaign.flag == 1 else 'Not Flagged' }}</p>
+                    <form method="post" action="{{ url_for('toggle_flag_campaign', campaign_id=campaign.id) }}">
+                        {% if campaign.flag == 1 %}
+                        <button type="submit" class="btn btn-secondary">Unflag</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-warning">Flag</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

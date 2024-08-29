@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('sponsor_dashboard') }}">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="card">
+        <div class="card-header">
+            <h4>{{ campaign.name }}</h4>
+        </div>
+        {% if campaign.flag == 1 %}
+        <div class="alert alert-warning" role="alert">
+            <strong>RESTRICTED:</strong> This campaign has been blocked. contact customer care!!
+        </div>
+        {% else %}
+
+        <div class="card-body">
+            <p><strong>Description:</strong> {{ campaign.description }}</p>
+            <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+            <p><strong>Goals:</strong> {{ campaign.goals }}</p>
+            <p><strong>Start Date:</strong> {{ campaign.start_date }}</p>
+            <p><strong>End Date:</strong> {{ campaign.end_date }}</p>
+            <p><strong>Visibility:</strong> {{ campaign.visibility.title() }}</p>
+            <p><strong>Status:</strong> <span class="badge {% if campaign.status == 'open' %}badge-success{% else %}badge-danger{% endif %}">{{ campaign.status.title() }}</span></p>
+            <div class="mt-4">
+                <form action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete Campaign</button>
+                </form>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('download_campaign', campaign_id=campaign.id, file_type='pdf') }}" class="btn btn-primary">Download as PDF</a>
+                <a href="{{ url_for('download_campaign', campaign_id=campaign.id, file_type='csv') }}" class="btn btn-secondary">Download as CSV</a>
+            </div>
+
+            
+            <div class="mt-4">
+                {% if campaign.status == 'open' %}
+                    <form action="{{ url_for('update_campaign_status', campaign_id=campaign.id, new_status='closed') }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Close Campaign</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('update_campaign_status', campaign_id=campaign.id, new_status='open') }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success">Open Campaign</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Requests</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Influencer Name</th>
+                        <th>Quote Amount</th>
+                        <th>Request Type</th>
+                        <th>Status</th>
+                        <th>Influencer Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td>{{ req.influencer_name }}</td>
+                        <td>${{ req.quote }}</td>
+                        <td>{{ 'Received' if req.request_type == 'to_sponsor' else 'Sent' }}</td>
+                        <td>
+                            {% if req.status == 'pending' %}
+                            <span class="badge badge-warning">Pending</span>
+                            {% elif req.status == 'accept' %}
+                            <span class="badge badge-success">Accepted</span>
+                            {% elif req.status == 'reject' %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if req.status_info %}
+                                {{ req.status_info.influencer_status }}
+                            {% else %}
+                                <span class="badge badge-secondary">Status not available</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if req.request_type == 'to_sponsor' and req.status == 'pending' %}
+                                <form action="{{ url_for('accept_request', request_id=req.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                </form>
+                                <form action="{{ url_for('reject_request', request_id=req.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                </form>
+                            {% elif req.status_info %}
+                                
+                                <p>Influencer Status: {{ req.status_info.influencer_status }}</p>
+                                <p>Sponsor Status: {{ req.status_info.sponsor_status }}</p>
+                                <p>Payment Status: {{ req.payment_status }}</p>
+                        
+                                {% if req.status_info.influencer_status == 'ongoing' %}
+                                    <span class="badge badge-secondary">No action required</span>
+                                {% elif req.status_info.influencer_status == 'completed' %}
+                                    {% if req.status_info.sponsor_status != 'accepted' %}
+                                        <form action="/update_sponsor_status/{{ req.id }}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-success btn-sm">Mark Sponsor Status as Completed</button>
+                                        </form>
+                                    {% else %}
+                                        {% if req.payment_status == 'done' %}
+                                            <span class="badge badge-info">Campaign request closed successfully</span>
+                                        {% else %}
+                                            <a href="{{ url_for('show_payment_page', request_id=req.id) }}" class="btn btn-primary btn-sm">Make Payment</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge badge-secondary">No action available</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-secondary">Status info not available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('index') }}">↩ Back</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div id="error_message" class="alert alert-danger" style="display:none;"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div id="loginForm">
+                <h1>Login</h1>
+                <form method="post" action="/auth" onsubmit="return validateLoginForm()">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>User Type:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="login_influencer" value="influencer" required>
+                            <label class="form-check-label" for="login_influencer">Influencer</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="login_sponsor" value="sponsor" required>
+                            <label class="form-check-label" for="login_sponsor">Sponsor</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="login_admin" value="admin" required>
+                            <label class="form-check-label" for="login_admin">Admin</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <hr>
+                <p>New user? <a href="#" onclick="showRegisterForm()">Register here</a></p>
+            </div>
+            
+            <div id="registerForm" style="display:none;">
+                <h1>Register</h1>
+                <form method="post" action="/register" onsubmit="return validateRegisterForm()">
+
+                    <div class="form-group">
+                        <label for="reg_email">Email:</label>
+                        <input type="email" class="form-control" id="reg_email" name="email" required>
+                    </div>
+ 
+                    <div class="form-group">
+                        <label for="reg_phone">Phone Number:</label>
+                        <input type="tel" class="form-control" id="reg_phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg_password">Password:</label>
+                        <input type="password" class="form-control" id="reg_password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg_password_confirm">Confirm Password:</label>
+                        <input type="password" class="form-control" id="reg_password_confirm" required>
+                    </div>
+                    <div class="form-group">
+                        <label>User Type:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="reg_influencer" value="influencer" required>
+                            <label class="form-check-label" for="reg_influencer">Influencer</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="reg_sponsor" value="sponsor" required>
+                            <label class="form-check-label" for="reg_sponsor">Sponsor</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <hr>
+                <p>Already have an account? <a href="#" onclick="showLoginForm()">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showRegisterForm() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+}
+
+function showLoginForm() {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+}
+function validateLoginForm() {
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const userType = document.querySelector('input[name="user_type"]:checked');
+    const errorMessage = document.getElementById('error_message');
+
+    errorMessage.style.display = 'none'; 
+    
+    if (!email || !phone || !password || !userType) {
+        errorMessage.innerText = 'Please fill all required fields.';
+        errorMessage.style.display = 'block';
+        return false;
+    }
+
+    return true;
+}
+
+function validateRegisterForm() {
+    const email = document.getElementById('reg_email').value;
+    const phone = document.getElementById('reg_phone').value;
+    const password = document.getElementById('reg_password').value;
+    const passwordConfirm = document.getElementById('reg_password_confirm').value;
+    const userType = document.querySelector('input[name="user_type"]:checked');
+    const errorMessage = document.getElementById('error_message');
+
+    errorMessage.style.display = 'none'; 
+
+    if (!email || !phone || !password || !passwordConfirm || !userType) {
+        errorMessage.innerText = 'Please fill all required fields.';
+        errorMessage.style.display = 'block';
+        return false;
+    }
+
+   
+    if (password !== passwordConfirm) {
+        errorMessage.innerText = 'Passwords do not match.';
+        errorMessage.style.display = 'block';
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+{% endblock %}

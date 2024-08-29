@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('index') }}">↩ Back</a>
+</li>
+{% endblock %}
+
+{% block content %}
+{% if error_message %}
+<div class="alert alert-danger">{{ error_message }}</div>
+{% endif %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>Complete Sponsor Profile</h1>
+            <form method="post" action="{{ url_for('complete_profile_sponsor', auth_id=auth_id) }}">
+                <div class="form-group">
+                    <label for="fname">First Name:</label>
+                    <input type="text" class="form-control" id="fname" name="fname" required>
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" class="form-control" id="lname" name="lname" required>
+                </div>
+                <div class="form-group">
+                    <label for="company_name">Company Name:</label>
+                    <input type="text" class="form-control" id="company_name" name="company_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact_number">Contact Number:</label>
+                    <input type="tel" class="form-control" id="contact_number" name="contact_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_line1">Address Line 1:</label>
+                    <input type="text" class="form-control" id="address_line1" name="address_line1" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_line2">Address Line 2:</label>
+                    <input type="text" class="form-control" id="address_line2" name="address_line2">
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" class="form-control" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" class="form-control" id="country" name="country" required>
+                </div>
+                <div class="form-group">
+                    <label for="postal_code">Postal Code:</label>
+                    <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Complete Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

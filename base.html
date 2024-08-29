@@ -1,0 +1,125 @@
+<!-- app/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ignitase{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-4+GxAvV53E2u+EeR+IM1o/g3AzR/2TcE3p33MjZvPUqI3E/4R7il3bB3QJmkN8Z/P+6FbM/r9nX3R7Hgx7tC3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Google Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap" rel="stylesheet">
+    <!-- Custom Styles for Color Palette and Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=melodrama@700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=alpino@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0A1828;
+            color: #BFA181;
+            font-family: 'Alpino', sans-serif;
+        }
+
+        .logo-text {
+            color: #FEFEE3;
+            font-family: 'Melodrama', serif;
+            font-size: 70px;
+        }
+
+        header {
+            border-bottom: 2px solid #BFA181;
+        }
+
+        .navbar-nav li a {
+            color: #FEFEE3 !important;
+        }
+
+        .section {
+            padding: 50px 0;
+            min-height: 100vh;
+        }
+
+        .footer {
+            color: #BFA181;
+            text-align: center;
+            padding: 20px;
+        }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .form-check-input {
+        margin-right: 10px;
+    }
+
+    .form-check-label {
+        font-weight: normal;
+    }
+
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <span class="logo-text">Ignitase</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        {% block nav_links %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#what-is-ignitase">What is Ignitase?</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#why-choose-us">Why Choose Us?</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth') }}">Login/Register</a>
+                        </li>
+                        {% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <p>&copy; 2024 Ignitase. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+pbv9u6Hc1QVkYZI0MW+X6F7jkJ5yI5foj2"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

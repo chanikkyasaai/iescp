@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('influencer_dashboard') }}">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>My Campaigns</h1>
+
+    {% if campaigns %}
+        {% for campaign, request, status in campaigns %}
+            <div class="card mb-3 border campaign-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ url_for('campaign_detail', campaign_id=campaign.id, auth_id=influencer.auth_id) }}">{{ campaign.name }}</a>
+                        <small class="float-right">
+                            <strong style="color: rgb(247, 74, 74);"> End Date:</strong> {{ campaign.end_date.strftime('%Y-%m-%d') }}
+                            <br>
+                            <strong>Budget:</strong> ${{ campaign.budget }}
+                        </small>
+                    </h5>
+                    
+                    {% if campaign.flag == 1 %}
+                    <div class="alert alert-warning" role="alert">
+                        <strong>RESTRICTED:</strong> This campaign has been blocked.
+                    </div>
+                    {% else %}
+                    
+                    <p class="card-text">{{ campaign.description }}</p>
+                    <p class="card-text"><strong>Goal:</strong> {{ campaign.goals }}</p>
+                    
+                    <p><strong>Sponsor Status:</strong> {{ status.sponsor_status if status.sponsor_status else 'Waiting for confirmation...' }}</p>
+                    <p><strong>Payment Status:</strong> {{ status.payment_status if status.payment_status else 'Waiting for payment...' }}</p>
+                    <p><strong>Quote:</strong> ${{ request.quote if request.quote else 'N/A' }}</p>
+                    
+                    {% if status and status.influencer_status == 'ongoing' %}
+                        <form action="{{ url_for('update_status', request_id=request.id) }}" method="POST">
+                            <button type="submit" class="btn btn-primary">Mark as Completed</button>
+                        </form>
+                    {% endif %}
+                    
+                    {% if status and status.sponsor_status == 'accepted' and status.payment_status == 'done' and status.influencer_status == 'completed' %}
+                        <span class="badge badge-success">Campaign Completed Successfully</span>
+                    {% else %}
+                        <span class="badge badge-warning">Campaign In Progress</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No campaigns found.</p>
+    {% endif %}
+</div>
+{% endblock %}

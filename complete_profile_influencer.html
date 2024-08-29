@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('index') }}">↩ Back</a>
+</li>
+{% endblock %}
+
+{% block content %}
+{% if error_message %}
+<div class="alert alert-danger">{{ error_message }}</div>
+{% endif %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>Complete Influencer Profile</h1>
+            <form method="post" action="{{ url_for('complete_profile_influencer', auth_id=auth_id) }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="fname">First Name:</label>
+                    <input type="text" class="form-control" id="fname" name="fname" required>
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" class="form-control" id="lname" name="lname" required>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <input type="text" class="form-control" id="bio" name="bio" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_line1">Address Line 1:</label>
+                    <input type="text" class="form-control" id="address_line1" name="address_line1" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_line2">Address Line 2:</label>
+                    <input type="text" class="form-control" id="address_line2" name="address_line2">
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" class="form-control" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" class="form-control" id="country" name="country" required>
+                </div>
+                <div class="form-group">
+                    <label for="postal_code">Postal Code:</label>
+                    <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                </div>
+                <div class="form-group">
+                    <label for="social_url">Social Media URL:</label>
+                    <input type="url" class="form-control" id="social_url" name="social_url" required>
+                </div>
+                <div class="form-group">
+                    <label for="birth_date">Birth Date:</label>
+                    <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="niche">Niche:</label>
+                    <select class="form-control" id="niche" name="niche" required>
+                        <option value="">Select Niche</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="technology">Technology</option>
+                        <option value="travel">Travel</option>
+                        <option value="food">Food</option>
+                        <option value="fitness">Fitness</option>
+                        <option value="beauty">Beauty</option>
+                        <option value="gaming">Gaming</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reach">Reach:</label>
+                    <input type="number" class="form-control" id="reach" name="reach" required>
+                </div>
+                <div class="form-group">
+                    <label for="image">Profile Image:</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Complete Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

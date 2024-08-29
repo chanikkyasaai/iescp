@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('influencer_dashboard') }}">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <form id="influencerForm" method="post" action="{{ url_for('influencer_profile') }}" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img src="{{ influencer.image_url }}" class="img-fluid image-3d" alt="Influencer Image">                <div class="form-group mt-4">
+                            <input type="file" class="form-control-file" id="profileImage" name="profile_image" style="display: none;">
+                        
+                        </div>
+
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="col-md-8">
+                        <h2 class="card-title">{{ influencer.fname }} {{ influencer.lname }}</h2>
+                        <div class="form-group">
+                            <label for="fname">First Name:</label>
+                            <input type="text" class="form-control" id="fname" name="fname" value="{{ influencer.fname }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="lname">Last Name:</label>
+                            <input type="text" class="form-control" id="lname" name="lname" value="{{ influencer.lname }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">Bio:</label>
+                            <input type="text" class="form-control" id="bio" name="bio" value="{{ influencer.bio }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDate">Birth Date:</label>
+                            <input type="date" class="form-control" id="birthDate" name="birth_date" value="{{ influencer.birth_date }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender:</label>
+                            <input type="text" class="form-control" id="gender" name="gender" value="{{ influencer.gender }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="verificationStatus">Verification Status:</label>
+                            <input type="text" class="form-control" id="verificationStatus" name="verification_status" value="{% if influencer.verification_status == -1 %}
+                            Not Verified
+                            {% elif influencer.verification_status == 0 %}
+                            Under Verification
+                            {% elif influencer.verification_status == 1 %}
+                            Verified
+                            {% endif %}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="niche">Niche:</label>
+                            <input type="text" class="form-control" id="niche" name="niche" value="{{ influencer.niche }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="reach">Reach:</label>
+                            <input type="number" class="form-control" id="reach" name="reach" value="{{ influencer.reach }}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="social_url">Social URL:</label>
+                    <input type="text" class="form-control" id="social_url" name="social_url" value="{{ influencer.social_url }}" readonly>
+                </div>
+
+                <!-- Address -->
+                <h4 class="card-title mt-4">Address</h4>
+                <div class="form-group">
+                    <label for="addressLine1">Address Line 1:</label>
+                    <input type="text" class="form-control" id="addressLine1" name="address_line1" value="{{ influencer.address_line1 }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="addressLine2">Address Line 2:</label>
+                    <input type="text" class="form-control" id="addressLine2" name="address_line2" value="{{ influencer.address_line2 }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" name="city" value="{{ influencer.city }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" class="form-control" id="state" name="state" value="{{ influencer.state }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" class="form-control" id="country" name="country" value="{{ influencer.country }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="postalCode">Postal Code:</label>
+                    <input type="text" class="form-control" id="postalCode" name="postal_code" value="{{ influencer.postal_code }}" readonly>
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="file" class="form-control-file" id="profileImage" name="profile_image" style="display: none;">
+                    <button type="button" class="btn btn-primary" id="editButton" onclick="enableEditing()">Edit</button>
+                    <button type="submit" class="btn btn-success" id="saveButton" style="display: none;">Save</button>
+                    <br>
+                    <a href="{{ url_for('influencer_profile') }}" class="btn btn-secondary" id="cancelButton" style="display: none;">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function enableEditing() {
+        const form = document.forms['influencerForm'];
+        for (let i = 0; i < form.elements.length; i++) {
+            if (form.elements[i].tagName.toLowerCase() !== 'button' && form.elements[i].type !== 'file') {
+                form.elements[i].removeAttribute('readonly');
+            }
+        }
+        document.getElementById('profileImage').style.display = 'block'; // Show the file input
+        document.getElementById('editButton').style.display = 'none';
+        document.getElementById('saveButton').style.display = 'block';
+        document.getElementById('cancelButton').style.display = 'inline-block'; 
+    }
+</script>
+{% endblock %}

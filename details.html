@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"> Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ entity_type.capitalize() }} Details</h1>
+
+    {% if entity_type == 'influencer' %}
+    <div class="card">
+        <div class="card-body">
+            <h3>{{ entity[0].fname }} {{ entity[0].lname }}</h3>
+            <p>Email: {{ entity[1].email }}</p>
+            <p>Phone: {{ entity[1].phone }}</p>
+            <p><strong>Address:</strong> {{ entity[0].address_line1 }} {{ entity[0].address_line2 }}, {{ entity[0].city }}, {{ entity[0].state }}, {{ entity[0].country }}, {{ entity[0].postal_code }}</p>
+            <p><strong>Social URL:</strong> <a href="{{ entity[0].social_url }}" target="_blank">{{ entity[0].social_url }}</a></p>
+            <p><strong>Birth Date:</strong> {{ entity[0].birth_date }}</p>
+            <p><strong>Gender:</strong> {{ entity[0].gender }}</p>
+            <p><strong>Verification Status:</strong> 
+                {% if entity[0].verification_status == -1 %}Flagged
+                {% elif entity[0].verification_status == 0 %}Not Verified
+                {% else %}Verified
+                {% endif %}
+            </p>
+            <p><strong>Niche:</strong> {{ entity[0].niche }}</p>
+            <p><strong>Reach:</strong> {{ entity[0].reach }}</p>
+            <p><strong>Bio:</strong> {{ entity[0].bio }}</p>
+        </div>
+    </div>
+
+    {% elif entity_type == 'sponsor' %}
+    <div class="card">
+        <div class="card-body">
+            <h3>{{ entity[0].fname }} {{ entity[0].lname }} ({{ entity[0].company_name }})</h3>
+            <p>Email: {{ entity[1].email }}</p>
+            <p>Phone: {{ entity[1].phone }}</p>
+            <p><strong>Contact Number:</strong> {{ entity[0].contact_number }}</p>
+            <p><strong>Address:</strong> {{ entity[0].address_line1 }} {{ entity[0].address_line2 }}, {{ entity[0].city }}, {{ entity[0].state }}, {{ entity[0].country }}, {{ entity[0].postal_code }}</p>
+            <p><strong>Flag Status:</strong> {{ 'Flagged' if entity[0].flag == 1 else 'Not Flagged' }}</p>
+        </div>
+    </div>
+
+    {% elif entity_type == 'campaign' %}
+    <div class="card">
+        <div class="card-body">
+            <h3>{{ entity.name }}</h3>
+            <p><strong>Description:</strong> {{ entity.description }}</p>
+            <p><strong>Goals:</strong> {{ entity.goals }}</p>
+            <p><strong>Start Date:</strong> {{ entity.start_date }}</p>
+            <p><strong>End Date:</strong> {{ entity.end_date }}</p>
+            <p><strong>Budget:</strong> {{ entity.budget }}</p>
+            <p><strong>Visibility:</strong> {{ entity.visibility }}</p>
+            <p><strong>Status:</strong> {{ entity.status }}</p>
+            <p><strong>Flag Status:</strong> {{ 'Flagged' if entity.flag == 1 else 'Not Flagged' }}</p>
+            <p><strong>Sponsor:</strong> <a href="{{ url_for('details', entity_type='sponsor', id=entity.sponsor_id) }}">{{ entity.sponsor.fname }} {{ entity.sponsor.lname }} ({{ entity.sponsor.company_name }})</a></p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

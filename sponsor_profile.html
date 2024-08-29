@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('sponsor_dashboard') }}">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Profile</h2>
+    <form method="post" id="profileForm">
+        <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" name="fname" class="form-control" value="{{ sponsor.fname }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" name="lname" class="form-control" value="{{ sponsor.lname }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="company_name">Company Name</label>
+            <input type="text" id="company_name" name="company_name" class="form-control" value="{{ sponsor.company_name }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Contact Number</label>
+            <input type="text" id="contact_number" name="contact_number" class="form-control" value="{{ sponsor.contact_number }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="address_line1">Address Line 1</label>
+            <input type="text" id="address_line1" name="address_line1" class="form-control" value="{{ sponsor.address_line1 }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="address_line2">Address Line 2</label>
+            <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{ sponsor.address_line2 }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" class="form-control" value="{{ sponsor.city }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" class="form-control" value="{{ sponsor.state }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" class="form-control" value="{{ sponsor.country }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="postal_code">Postal Code</label>
+            <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{ sponsor.postal_code }}" disabled>
+        </div>
+
+        <!-- Edit, Save, and Cancel Buttons -->
+        <div id="actionButtons">
+            <button type="button" id="editButton" class="btn btn-primary">Edit</button>
+            <button type="submit" id="saveButton" class="btn btn-success" style="display:none;">Save</button>
+            <button type="button" id="cancelButton" class="btn btn-secondary" style="display:none;">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('editButton').addEventListener('click', function() {
+    
+    document.querySelectorAll('#profileForm input').forEach(function(input) {
+        input.disabled = false;
+    });
+    
+    
+    document.getElementById('saveButton').style.display = 'inline-block';
+    document.getElementById('cancelButton').style.display = 'inline-block';
+    document.getElementById('editButton').style.display = 'none';
+});
+
+document.getElementById('cancelButton').addEventListener('click', function() {
+  
+    document.querySelectorAll('#profileForm input').forEach(function(input) {
+        input.disabled = true;
+        input.value = input.defaultValue;
+    });
+    
+    
+    document.getElementById('saveButton').style.display = 'none';
+    document.getElementById('cancelButton').style.display = 'none';
+    document.getElementById('editButton').style.display = 'inline-block';
+});
+</script>
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('sponsor_profile') }}">Profile</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+   
+        <div class="col-md-7">
+            <div class="card campaigns-box">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4>Your Campaigns</h4>
+                        <br>
+                       
+                        <div class="form-group d-flex align-items-center">
+                            <div class="form-check mr-3">
+                                <input type="radio" class="form-check-input" id="all" name="campaignFilter" value="all" checked>
+                                <label class="form-check-label" for="all">All</label>
+                            </div>
+                            <div class="form-check mr-3">
+                                <input type="radio" class="form-check-input" id="active" name="campaignFilter" value="open">
+                                <label class="form-check-label" for="active">Active</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="inactive" name="campaignFilter" value="closed">
+                                <label class="form-check-label" for="inactive">Inactive</label>
+                            </div>
+                            <button class="btn btn-secondary ml-3" type="button" id="applyFilterBtn">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="createCampaignBtn">Create Campaign</button>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="create-campaign-form d-none mb-4" id="createCampaignForm">
+                        <h5>Create New Campaign</h5>
+                        <form id="newCampaignForm" action="/create_campaign" method="POST">
+                            <div class="form-group">
+                                <label for="campaignName">Campaign Name</label>
+                                <input type="text" class="form-control" id="campaignName" name="campaignName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="campaignDescription">Description</label>
+                                <textarea class="form-control" id="campaignDescription" name="campaignDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="campaignBudget">Budget</label>
+                                <input type="number" class="form-control" id="campaignBudget" name="campaignBudget" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="campaignGoals">Goals</label>
+                                <input type="text" class="form-control" id="campaignGoals" name="campaignGoals" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="campaignVisibility">Visibility</label>
+                                <select class="form-control" id="campaignVisibility" name="campaignVisibility" required>
+                                    <option value="public">Public</option>
+                                    <option value="private">Private</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancelCreateCampaign">Cancel</button>
+                        </form>
+                    </div>
+                    <ul class="list-group list-group-flush" id="campaignList">
+                        {% for campaign in campaigns %}
+                        <li class="list-group-item campaign-item" data-status="{{ campaign.status }}">
+                           
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="campaign-name mb-0">
+                                        <a href="/campaign/{{ campaign.id }}" class="text-decoration-none text-dark">{{ campaign.name }}</a>
+                                        <span class="badge badge-secondary ml-2">{{ campaign.visibility.title() }}</span>
+                                        <span class="badge {% if campaign.status == 'open' %}badge-success{% else %}badge-danger{% endif %} ml-2">{{ campaign.status.title() }}</span>
+                                    </h5>
+                                </div>
+                                <div>
+                                    <p class="mb-0"><strong>Start Date:</strong> {{ campaign.start_date }}</p>
+                                    <p class="mb-0"><strong>End Date:</strong> {{ campaign.end_date }}</p>
+                                </div>
+                            </div>
+                            <div class="campaign-details mt-2">
+                                <p class="campaign-description">{{ campaign.description }}</p>
+                                <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                                <p><strong>Goals:</strong> {{ campaign.goals }}</p>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item">
+                            <div class="campaign-item">
+                                <p class="mb-0">No campaigns found.</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="alert-container">
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+<div class="col-md-5">
+    <div class="card search-influencer-box">
+        <div class="card-header">
+            <h4>Search Influencer</h4>
+        </div>
+        <div class="card-body">
+           
+            <form id="searchInfluencerForm">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Search Influencers" aria-label="Search Influencers">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group d-flex align-items-center mb-3">
+                    <label for="reachFilter" class="mr-2">Reach:</label>
+                    <input type="number" class="form-control" id="reachFilter" name="reachFilter" placeholder="Min Reach" style="width: 100px;">
+                    <label for="nicheFilter" class="ml-3 mr-2">Niche:</label>
+                    <select class="form-control" id="nicheFilter" name="nicheFilter" style="width: 150px;">
+                        <option value="">Select Niche</option>
+                        {% for niche in niches %}
+                        <option value="{{ niche }}">{{ niche }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-secondary ml-3" type="button" id="applySearchFilterBtn">
+                        <i class="fa fa-filter"></i>
+                    </button>
+                </div>
+            </form>
+
+           
+            <ul class="list-group list-group-flush" id="searchResults">
+                {% for influencer in influencers %}
+                <li class="list-group-item search-result-item">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ influencer.image_url }}" alt="{{ influencer.fname }} {{ influencer.lname }}" class="img-thumbnail mr-3" style="width: 70px; height: 70px;">
+                        <div class="d-flex flex-column">
+                            <h5 class="mb-1">
+                                <a href="/influencer/{{ influencer.auth_id }}" class="text-decoration-none text-dark">{{ influencer.fname }} {{ influencer.lname }}</a>
+                            </h5>
+                            <p class="mb-1">Niche: {{ influencer.niche }}</p>
+                            <p class="mb-0">Reach: {{ influencer.reach }}</p>
+                        </div>
+                        
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                <p class="mb-0">No influencers found.</p>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+<style>
+.search-influencer-box {
+    margin-top: 20px;
+    height: 500px; 
+    overflow-y: auto; 
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+}
+
+.search-result-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.card-header {
+    background-color: white;
+    color: black;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #178582;
+    border-color: #178582;
+}
+
+.btn-primary:hover {
+    background-color: #116b66;
+    border-color: #116b66;
+}
+
+.btn-secondary {
+    background-color: #BFA181;
+    border-color: #BFA181;
+}
+
+.btn-secondary:hover {
+    background-color: #9e856f;
+    border-color: #9e856f;
+}
+
+.no-results {
+    display: none; 
+    text-align: center;
+    color: gray;
+    font-weight: bold;
+}
+
+</style>
+
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+        const createCampaignBtn = document.getElementById('createCampaignBtn');
+        const createCampaignForm = document.getElementById('createCampaignForm');
+        const cancelCreateCampaign = document.getElementById('cancelCreateCampaign');
+        const applyFilterBtn = document.getElementById('applyFilterBtn');
+        const campaignItems = document.querySelectorAll('.campaign-item');
+        const searchBtn = document.getElementById('searchBtn');
+        const reachFilter = document.getElementById('reachFilter');
+        const nicheFilter = document.getElementById('nicheFilter');
+
+        createCampaignBtn.addEventListener('click', function() {
+            createCampaignForm.classList.toggle('d-none');
+        });
+
+        cancelCreateCampaign.addEventListener('click', function() {
+            createCampaignForm.classList.add('d-none');
+        });
+
+        applyFilterBtn.addEventListener('click', function() {
+            const filterValue = document.querySelector('input[name="campaignFilter"]:checked').value;
+            campaignItems.forEach(item => {
+                const status = item.getAttribute('data-status');
+                if (filterValue === 'all' || filterValue === status) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+       
+
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const reachFilter = document.getElementById('reachFilter');
+    const nicheFilter = document.getElementById('nicheFilter');
+    const searchResults = document.getElementById('searchResults');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+
+   
+    function filterInfluencers() {
+        const searchText = searchInput.value.toLowerCase();
+        const minReach = parseInt(reachFilter.value, 10) || 0;
+        const selectedNiche = nicheFilter.value;
+
+        const items = searchResults.querySelectorAll('.search-result-item');
+        let anyVisible = false;
+
+        items.forEach(item => {
+            const name = item.querySelector('h5').textContent.toLowerCase();
+            const reach = parseInt(item.querySelector('.d-flex.flex-column p.mb-0').textContent.replace('Reach: ', ''), 10);
+            const niche = item.querySelector('.d-flex.flex-column p.mb-1').textContent.replace('Niche: ', '');
+
+            const matchesSearch = name.includes(searchText);
+            const matchesReach = reach >= minReach;
+            const matchesNiche = !selectedNiche || niche === selectedNiche;
+
+            if (matchesSearch && matchesReach && matchesNiche) {
+                item.style.display = '';
+                anyVisible = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+  
+        noResultsMessage.style.display = anyVisible ? 'none' : 'block';
+    }
+
+
+    document.getElementById('searchBtn').addEventListener('click', filterInfluencers);
+    document.getElementById('applySearchFilterBtn').addEventListener('click', filterInfluencers);
+});
+
+
+
+</script>
+{% endblock %}

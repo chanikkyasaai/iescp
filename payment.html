@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h4>Payment Portal</h4>
+        </div>
+        <div class="card-body">
+            <h5>Choose Payment Method</h5>
+            <form method="post" action="{{ url_for('make_payment', request_id=request.id) }}">
+                <div class="form-group">
+                    <label for="paymentMethod">Select Payment Method:</label>
+                    <select id="paymentMethod" name="payment_method" class="form-control" required>
+                        <option value="">Select...</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                    </select>
+                </div>
+
+                <!-- Credit Card Dummy Fields -->
+                <div id="creditCardFields" class="payment-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="ccNumber">Credit Card Number:</label>
+                        <input type="text" id="ccNumber" name="cc_number" class="form-control" placeholder="1234 5678 9012 3456">
+                    </div>
+                    <div class="form-group">
+                        <label for="ccExpiry">Expiry Date:</label>
+                        <input type="text" id="ccExpiry" name="cc_expiry" class="form-control" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label for="ccCvv">CVV:</label>
+                        <input type="text" id="ccCvv" name="cc_cvv" class="form-control" placeholder="123">
+                    </div>
+                </div>
+
+                <!-- PayPal Dummy Fields -->
+                <div id="paypalFields" class="payment-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="paypalEmail">PayPal Email:</label>
+                        <input type="email" id="paypalEmail" name="paypal_email" class="form-control" placeholder="example@paypal.com">
+                    </div>
+                </div>
+
+                <!-- Bank Transfer Dummy Fields -->
+                <div id="bankTransferFields" class="payment-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="accountName">Account Name:</label>
+                        <input type="text" id="accountName" name="account_name" class="form-control" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number:</label>
+                        <input type="text" id="accountNumber" name="account_number" class="form-control" placeholder="123456789">
+                    </div>
+                    <div class="form-group">
+                        <label for="bankName">Bank Name:</label>
+                        <input type="text" id="bankName" name="bank_name" class="form-control" placeholder="Bank of Example">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Make Payment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('paymentMethod').addEventListener('change', function() {
+
+    document.querySelectorAll('.payment-fields').forEach(function(el) {
+        el.style.display = 'none';
+    });
+
+    var paymentMethod = this.value;
+    if (paymentMethod === 'credit_card') {
+        document.getElementById('creditCardFields').style.display = 'block';
+    } else if (paymentMethod === 'paypal') {
+        document.getElementById('paypalFields').style.display = 'block';
+    } else if (paymentMethod === 'bank_transfer') {
+        document.getElementById('bankTransferFields').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}
